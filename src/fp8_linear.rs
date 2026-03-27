@@ -477,7 +477,17 @@ pub fn fp8_matmul_cutlass(
     if dtype != DType::F16 && dtype != DType::BF16 {
         candle_core::bail!("fp8_matmul_cutlass requires f16 or bf16 input");
     }
-    if sm_version >= 100 {
+    //if sm_version >= 100 {
+    //    if !weight_scale_col_major {
+    //        candle_core::bail!("scales_b must be column major for sm100+");
+    //    }
+    //} else if !weight_scale_row_major {
+    //    candle_core::bail!("scales_b must be contiguous row major for sm90");
+    //}
+    if sm_version >= 120 {
+    // SM120/SM121: ScaleConfig::deduce_layoutSFB() handled internally
+    // no layout constraint needed from caller
+    } else if sm_version >= 100 {
         if !weight_scale_col_major {
             candle_core::bail!("scales_b must be column major for sm100+");
         }
