@@ -326,7 +326,7 @@ pub fn fp8_matmul_flashinfer(
 
     let dev = input.device();
     let sm_version = cuda_utils::sm_version(dev.as_cuda_device()?).unwrap_or(0) as usize;
-    if !(90..100).contains(&sm_version) {
+    if !(90..100).contains(&sm_version) && sm_version < 120 {
         candle_core::bail!("fp8_matmul_flashinfer requires Hopper (sm90)");
     }
 
